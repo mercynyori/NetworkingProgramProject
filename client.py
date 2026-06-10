@@ -1,7 +1,13 @@
 import socket
-import threading
+import sys
 import time
-from datetime import datetime
+import threading
+import select
 
-#config
-Host = '0.0.0.0' #listens to all interfaces
+class ChatClient:
+  def __init__(Self) :
+    self.socket = None
+    self.Username = None
+    self.current_room = "General"
+    self.running = False
+    self.received_thread = None
