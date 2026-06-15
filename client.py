@@ -1,11 +1,9 @@
-import socket
-import sys
-import time
-import threading
-import select
+import socket # networking communications
+import threading # sending and receiving at the same time
+
 
 class ChatClient:
-  def __init__(Self) :
+  def __init__(self) :
     self.socket = None
     self.Username = None
     self.current_room = "General"
