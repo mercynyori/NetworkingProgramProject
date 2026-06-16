@@ -26,8 +26,21 @@ def __init__(self, host="127.0.0.1" , port=2707):
     self.nicknames = []
 
 
-def broadcasting(self, message,sender_client=None)
+def broadcasting(self, message,sender_client=None):
      """ here we send messages to every client """
+     #loop through all the clients that we got
+     for client in self.client:
+        try:
+          #sending message if fails client disconnected
+          client.send(message)
+        except Exception as error:
+            print(f"No able to send to client:{error}")
+
+            
+
+
+          
+
 
      
 

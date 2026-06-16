@@ -14,8 +14,8 @@ class ChatClient:
        try:
         self.client.connect((host, port))
         print(f"Connected to server at {host}:{port}")
-       except Exception as e:
-        print(f"Failed to connect : {e}")
+       except Exception as error:
+        print(f"Failed to connect : {error}")
         #storage for nickname, we be there ones user sets it
         self.nickname = None 
 
