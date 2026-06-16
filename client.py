@@ -22,7 +22,7 @@ class ChatClient:
 
 
     def send_msg(self): 
-      """here we gat messayges and we send to server doesnt block receiving"""
+      """here we gat messages and we send to server doesnt block receiving"""
       #infite while loop to keep accepting user input and msg they send untill they quit
       while True:
         #lets get their users input first and put in a data structure
