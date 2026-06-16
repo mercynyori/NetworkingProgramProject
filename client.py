@@ -77,3 +77,12 @@ if client.connect(host, port, username):
 else:
 print("Failed to connect to server")
 
+#creating username
+username = input("Username (2-20 characters): ").strip()
+    if not username or len(username) < 2:
+        print("Username must be at least 2 characters")
+        return
+    if len(username) > 20:
+        print("Username must be at most 20 characters")
+        return
+
