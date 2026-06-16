@@ -71,4 +71,9 @@ def Disconnect(self):
     print ("Disconnected from server")
 
 #connecting and running
+client = ChatClient()
+if client.connect(host, port, username):
+    client.run()
+else:
+print("Failed to connect to server")
 
