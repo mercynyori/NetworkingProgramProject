@@ -66,8 +66,9 @@ def Disconnect(self):
   if self.socket:
     try:
       self.socket.close()
-      except:
-      pass
+    except OSError as e:
+        print(f"Error closing socket: {e}")
+    else:
     print ("Disconnected from server")
 
 #connecting and running
