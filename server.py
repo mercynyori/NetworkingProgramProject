@@ -1,3 +1,4 @@
+
 import socket #networking communications
 import threading #multiple connections
 
@@ -35,6 +36,28 @@ def broadcasting(self, message,sender_client=None):
           client.send(message)
         except Exception as error:
             print(f"No able to send to client:{error}")
+
+
+def remove_client(self,client):
+# here we remove the client once they disconnect
+    """here we clear the client when they disconnect so that we dont have memory leaks"""
+    for client in self.clients:
+        # find the index then use index to get the nickname
+        index = self.clients.index(client)
+        
+        nickname = self.clients.nicknames[index]
+
+# we remove the socket of the index and nickname
+        self.index.remove(index)
+        self.nicknames.remove(nickname)
+
+        client.socket()
+
+# inform everyone that the person has left
+left_room_message = f"{nickname} has left the room". encode()
+ self.broadcasting(left_room_message)
+
+
 
             
 

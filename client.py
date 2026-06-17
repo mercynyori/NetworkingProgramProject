@@ -30,7 +30,7 @@ class ChatClient:
       if message.lower() == '/quit' or message.lower() == '/exit':
                 print("Disconnecting...")
                 self.client.close()  # Close connection
-               break 
+                break 
     
 
     whole_message = f"{self.nickname}: {message}"
