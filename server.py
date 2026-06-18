@@ -55,7 +55,54 @@ def remove_client(self,client):
 
 # inform everyone that the person has left
 left_room_message = f"{nickname} has left the room". encode()
- self.broadcasting(left_room_message)
+self.broadcasting(left_room_message)
+
+print(f"{nickname} has left the room")
+
+
+def handle_client(self, client):
+    """Here the server listens to any message whether broadcasting or single based messeges"""
+    try:
+         while True : # infite loop on and on 
+            message = client.recv(1024)
+
+            if message:
+                self.broadcast(message, sender_client=client)
+            else:
+                self.remove(client)
+                break
+    except:  # if client has left the room
+    self.remove_client(client)
+    break
+
+def accept_client(self, client):
+    """ Here the server is constantly waiting for someone to come forever, asks for their name  then accepts"""
+while True:
+    # wait for the client to come
+    client, address = self.server.accept()
+    #  ask for there name 
+    client.send("MERCY".encode())
+    # check if the name exists
+    if nickname in self.nicknames:
+        client.send("name taken chose another one".encode())
+    # check if the name exists
+        client.send("MERCY".encode())
+    else:
+        break # exist 
+
+
+# add client to the chat
+    self.client.append(client)
+    self.nickname.append(nickname)
+    self.broadcast(f"{nickname}" entered!. encode())
+
+
+   
+
+
+
+
+
 
 
 
