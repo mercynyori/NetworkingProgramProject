@@ -96,6 +96,18 @@ while True:
     self.nickname.append(nickname)
     self.broadcast(f"{nickname}" entered!. encode())
 
+    # create the thread to listen
+    thread = threading.Thread(target= self.handle_client, args=(client,))
+    thread.start
+    
+    # start button for the server program
+    if__name__ == "__main__":
+    server = ChatServer()
+    server.run()
+
+
+
+
 
    
 
