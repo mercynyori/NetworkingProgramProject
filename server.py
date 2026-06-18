@@ -129,9 +129,5 @@ while True:
 
 
 
-#infite loop(the server prints connection message then closes connection)
-while True:
-    client_socket, client_address = server.accept()
-    print("The client is connected")
-    client_socket.close()
+
 
