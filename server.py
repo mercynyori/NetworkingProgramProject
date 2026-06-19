@@ -99,6 +99,10 @@ while True:
     # create the thread to listen
     thread = threading.Thread(target= self.handle_client, args=(client,))
     thread.start
+
+    def run_server(self):
+
+        
     
     # start button for the server program
     if__name__ == "__main__":
