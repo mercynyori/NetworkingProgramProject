@@ -96,13 +96,13 @@ while True:
     self.nickname.append(nickname)
     self.broadcast(f"{nickname}" entered!. encode())
 
-    # create the thread to listen
+    # create the thread to listen which allows other users to join
     thread = threading.Thread(target= self.handle_client, args=(client,))
     thread.start
 
     def run_server(self):
+             self.accept_clients()
 
-        
     
     # start button for the server program
     if__name__ == "__main__":
