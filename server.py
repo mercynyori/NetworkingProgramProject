@@ -41,6 +41,17 @@ def broadcasting(self, message,sender_client=None):
         except Exception as error:
             print(f"No able to send to client:{error}")
 
+    
+def broadcast_to_a_specific_room(self, ,message, room,sender=NONE ):
+    if room  in self.room:
+        for client in self.room[room_name]:
+            if client != sender:
+                try:
+                    client.send(message)
+                except
+                     self.remove(client)
+
+
 
 def remove_client(self,client):
 # here we remove the client once they disconnect
