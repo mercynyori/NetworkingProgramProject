@@ -26,9 +26,13 @@ def __init__(self, host="127.0.0.1" , port=2707):
     self.clients = []
     self.nicknames = []
 
-# romms created
-    self.rooms = {"Home", []}
-    self.user.rooms = {}
+# rooms created a dictionary is created when u enter u enter directly
+    self.rooms = {DEFAULT_ROOM: []} 
+    # track the rooms that they are in
+    self.user_rooms = {}  
+  
+
+
 
 
 def broadcasting(self, message,sender_client=None):
@@ -42,7 +46,8 @@ def broadcasting(self, message,sender_client=None):
             print(f"No able to send to client:{error}")
 
     
-def broadcast_to_a_specific_room(self, ,message, room,sender=NONE ):
+def broadcast_to_a_specific_room(self, message, room,sender=NONE ):
+    """Broadcasting to a specific roomdepending on what the user used"""
     if room  in self.room:
         for client in self.room[room_name]:
             if client != sender:
@@ -87,8 +92,8 @@ def handle_client(self, client):
                 self.remove(client)
                 break
     except:  # if client has left the room
-    self.remove_client(client)
-    break
+     self.remove_client(client)
+     break
 
 def accept_client(self, client):
     """ Here the server is constantly waiting for someone to come forever, asks for their name  then accepts"""
@@ -109,7 +114,17 @@ while True:
 # add client to the chat
     self.client.append(client)
     self.nickname.append(nickname)
-    self.broadcast(f"{nickname}" entered!. encode())
+    self.broadcast (f"{nickname}" entered!. encode())
+
+
+     # the user is added to the default room once accepted
+    self.rooms[DEFAULT_ROOM].append(client)
+
+     # always remember that the client is there in the room
+    self.user_rooms[client] = DEFAULT_ROOM
+
+    client.send(f"{nickname} is in {DEFAULT_ROOM}!".encode())
+
 
     # create the thread to listen which allows other users to join
     thread = threading.Thread(target= self.handle_client, args=(client,))

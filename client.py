@@ -7,7 +7,7 @@ class ChatClient:
 
     """
   
-    def __init__(self, host='127.0.0.1', port=5555):
+    def __init__(self, host='127.0.0.1', port=2707):
        # connect to socket the IPv4 and TCP 
        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
        # we now connect to server and if its not running we raise the expection part
