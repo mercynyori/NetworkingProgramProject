@@ -33,8 +33,6 @@ def __init__(self, host="127.0.0.1" , port=2707):
   
 
 
-
-
 def broadcasting(self, message,sender_client=None):
      """ here we send messages to every client """
      #loop through all the clients that we got
