@@ -26,6 +26,10 @@ def __init__(self, host="127.0.0.1" , port=2707):
     self.clients = []
     self.nicknames = []
 
+# romms created
+    self.rooms = {"Home", []}
+    self.user.rooms = {}
+
 
 def broadcasting(self, message,sender_client=None):
      """ here we send messages to every client """
