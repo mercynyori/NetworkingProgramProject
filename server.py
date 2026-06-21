@@ -27,7 +27,7 @@ def __init__(self, host="127.0.0.1" , port=2707):
     self.nicknames = []
 
 # rooms created a dictionary is created when u enter u enter directly
-    self.rooms = {DEFAULT_ROOM: []} 
+    self.rooms = {"Home": []} 
     # track the rooms that they are in
     self.user_rooms = {}  
   
@@ -81,17 +81,38 @@ print(f"{nickname} has left the room")
 def handle_client(self, client):
     """Here the server listens to any message whether broadcasting or single based messeges"""
     try:
-         while True : # infite loop on and on 
+         while True : # infite loop on and on of receiving thr clients message
             message = client.recv(1024)
-
-            if message:
+            # once u get the msg u send to everyone
+            if message: 
                 self.broadcast(message, sender_client=client)
             else:
                 self.remove(client)
-                break
+
     except:  # if client has left the room
      self.remove_client(client)
      break
+
+# the user is sble to create a chat room
+    if message.startswith(" /create"):
+        parts= message.split(" ")
+        if len(parts) > 1:
+            room_name = parts[1]
+
+        if roomname in self.rooms:
+            client.send(f"Room name taken choose another one!".encode())
+
+        else:
+            self.rooms[room_name] = []
+            client.send(f"Room has been created".encode())
+
+
+    
+
+    self.rooms[room_name].append(client)
+    self.user_rooms[client] = room_name
+    client.send(f"You have joined '{room_name} welcome!".encode())
+
 
 def accept_client(self, client):
     """ Here the server is constantly waiting for someone to come forever, asks for their name  then accepts"""
@@ -100,10 +121,10 @@ while True:
     client, address = self.server.accept()
     #  ask for there name 
     client.send("MERCY".encode())
-    # check if the name exists
+    # check if the name exists uniqueness
     if nickname in self.nicknames:
-        client.send("name taken chose another one".encode())
-    # check if the name exists
+        client.send("Name taken chose another one".encode())
+    # ask again 
         client.send("MERCY".encode())
     else:
         break # exist 
@@ -111,17 +132,18 @@ while True:
 
 # add client to the chat
     self.client.append(client)
-    self.nickname.append(nickname)
-    self.broadcast (f"{nickname}" entered!. encode())
+    self.nickname.append(nickname) #  unique names
+    self.broadcast (f"{nickname}" welcome!. encode())
 
 
-     # the user is added to the default room once accepted
+     # added to the default room once accepted
     self.rooms[DEFAULT_ROOM].append(client)
 
      # always remember that the client is there in the room
-    self.user_rooms[client] = DEFAULT_ROOM
+    self.user_rooms[client] = "DEFAULT_ROOM"
 
-    client.send(f"{nickname} is in {DEFAULT_ROOM}!".encode())
+    client.send(f"{nickname} is in {DEFAULT_ROOM} welcome !".encode())
+    client.send(f"Commands: /create, /join")
 
 
     # create the thread to listen which allows other users to join

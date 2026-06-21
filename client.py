@@ -25,48 +25,65 @@ class ChatClient:
       """here we gat messages and we send to server doesnt block receiving"""
       #infite while loop to keep accepting user input and msg they send untill they quit
       while True:
+
         #lets get their users input first and put in a data structure
         message = input()
-      if message.lower() == '/quit' or message.lower() == '/exit':
+
+      if  message.lower() == '/exit':
                 print("Disconnecting...")
                 self.client.close()  # Close connection
-                break 
+
+       # send message to server
+      self.client.send(message.encode()) 
+       
+        
+   whole_message = f"{self.nickname}: {message}"
     
 
-    whole_message = f"{self.nickname}: {message}"
     
 
-    
-    def receive_msg(self): 
+   def receive_msg(self): 
       """ listens  continuosly for an any incoming messages to the user """ 
       #while loopp 
       while True:
         try: 
-          # waiting for message from client, decode converts the byte to text
-          # like waiting for a phone to ring in phone booth
-          message = self.client.recv(1024).decode() 
+          message = self.client.recv(1024).decode()
 
+        
         #  checking what type of message from the sever
           if message == "MERCY":  
              
             #  server will ask for the name
              self.client.send(self.nickname.encode())
 
-          elif message == "name taken chose another one":
+          elif message == "NAME_TAKEN":
              print("Name has been taken choose another one")
              self.nickname = input("Your new nickname :")
              self.client.send(self.nickname.encode())
+
           
+          elif message == "NAME_EMPTY":
+             print("Your name cannot be empty")
+             self.nickname= input("New nickname: ")
+             self.client.send(self.nickname.encode())
+          
+      
           else:
             #  print the normal message of what the other users have
              print(message)
+
         except
-        print("user dicsconnected from the server")
+        print("User disconnected from the server")
 
       break
 
-    if __client__== "__main__":
-       client = ClientChat()
+def run_client(self):
+       self.accept_clients()
+
+
+      #  the start buttom
+       if __name__== "__main__":
+        client = ChatClient()
        client.run()
 
 
