@@ -12,12 +12,13 @@ class ChatClient:
        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
        # we now connect to server and if its not running we raise the expection part
        try:
-        self.client.connect((host, port))
+        self.client.connect(("127.0.0.1", 2707))
         print(f"Connected to server at {host}:{port}")
        except Exception as error:
         print(f"Failed to connect : {error}")
         #storage for nickname, we be there ones user sets it
         self.nickname = None 
+        self.running = True
 
 
 
@@ -37,12 +38,12 @@ class ChatClient:
       self.client.send(message.encode()) 
        
         
-   whole_message = f"{self.nickname}: {message}"
+      whole_message = f"{self.nickname}: {message}"
     
 
     
 
-   def receive_msg(self): 
+    def receive_msg(self): 
       """ listens  continuosly for an any incoming messages to the user """ 
       #while loopp 
       while True:
@@ -72,19 +73,40 @@ class ChatClient:
             #  print the normal message of what the other users have
              print(message)
 
-        except
-        print("User disconnected from the server")
+        except:
+         print("User disconnected from the server")
 
-      break
+         break
 
 def run_client(self):
+       print("=" * 50)
+       print("CHAT CLIENT")
+       print("=" * 50)
+       
+       self.nickname = input(("Choose your nickname:"))
+       print(f"Welcome {nickname}")
+       print("Commands: /create, /join, /rooms, /users")
+       print("=" * 50)
+
+          # the receiving thread the ears listening
+       receive_thread = threading.Thread(target=self.receive_messages) 
+       receive_thread.daemon = True
+       receive_thread.start()
+
+           # the mouth to send 
+       send_thread = threading.Thread(target=self.send_messages)
+       send_thread.daemon = True
+       send_thread.start() 
+
+       send_thread.join()
+                             
        self.accept_clients()
 
 
       #  the start buttom
        if __name__== "__main__":
-        client = ChatClient()
-       client.run()
+           client = ChatClient()
+           client.run()
 
 
 
@@ -97,35 +119,4 @@ def run_client(self):
 
 
   
-    self.socket = None
-    self.Username = None
-    self.current_room = "General"
-    self.running = False
-    self.received_thread = None
-
-def Disconnect(self):
-  self.running = False
-  if self.socket:
-    try:
-      self.socket.close()
-    except OSError as e:
-        print(f"Error closing socket: {e}")
-    else:
-    print ("Disconnected from server")
-
-#connecting and running
-client = ChatClient()
-if client.connect(host, port, username):
-    client.run()
-else:
-print("Failed to connect to server")
-
-#creating username
-username = input("Username (2-20 characters): ").strip()
-    if not username or len(username) < 2:
-        print("Username must be at least 2 characters")
-        return
-    if len(username) > 20:
-        print("Username must be at most 20 characters")
-        return
-
+   
