@@ -77,7 +77,6 @@ self.broadcasting(left_room_message)
 
 print(f"{nickname} has left the room")
 
-
 def handle_client(self, client):
     """Here the server listens to any message whether broadcasting or single based messeges"""
     try:
@@ -93,25 +92,64 @@ def handle_client(self, client):
      self.remove_client(client)
      break
 
-# the user is sble to create a chat room
+# the user is able to create a chat room
     if message.startswith(" /create"):
         parts= message.split(" ")
         if len(parts) > 1:
             room_name = parts[1]
 
-        if roomname in self.rooms:
-            client.send(f"Room name taken choose another one!".encode())
+            if room_name in self.rooms:
+               client.send(f"Room name taken choose another one!".encode())
 
         else:
-            self.rooms[room_name] = []
-            client.send(f"Room has been created".encode())
+         self.rooms[room_name] = []
+         client.send(f"Room has been created".encode())
+
+         self.rooms[room_name].append(client)
+         self.user_rooms[client] = room_name
+         client.send(f"You have joined '{room_name} welcome!".encode())
 
 
-    
+    else:
+     client.send("This is a wrong usage of /create <roomname>".encode())
 
-    self.rooms[room_name].append(client)
-    self.user_rooms[client] = room_name
-    client.send(f"You have joined '{room_name} welcome!".encode())
+          # joining a new chatroom
+    elif == "/join":
+    parts=message.split(" ")
+    if len(parts) > 1:
+            room_name = parts[1]
+
+      # removing from anyother room
+    if room_name in self.room: # check if the room is in the server
+            if client in self.user_room: # check if the clinet is in the room
+                old = self.ser_room[client] #  safe check 
+                self.room(old).remove(client) #  if they are there we remoeve them
+ 
+      # then now they join their new chat room
+    self.rooms[room_name].append(client)   #adds the user to the new room
+    self.user_room[client]= room_name  #stores the user in the new room
+    client.send(f"You have now joined {room_name}".encode())
+
+# get the users in the room
+    users=[] 
+    for i in self.rooms(room_name):
+        name = self.get_nickname(c)
+
+        if name:
+            user.append(name)
+        if users:
+         client.send(f"Users are : {', '.join(users)}".encode())
+        else:
+         client.send(f"Room is nonexistent").encode()
+
+    else:
+        client.send(f"This is the wrong usage of : /join <room_name>".encode())
+
+
+    elif == "/rooms":
+    client.send(f"Rooms: {', '.join(self.rooms)}".encode())
+        
+                
 
 
 def accept_client(self, client):
