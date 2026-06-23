@@ -7,12 +7,12 @@ class ChatClient:
 
     """
   
-    def __init__(self, host='127.0.0.1', port=2707):
+    def __init__(self, host='127.0.0.1', port=2808):
        # connect to socket the IPv4 and TCP 
        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
        # we now connect to server and if its not running we raise the expection part
        try:
-        self.client.connect(("127.0.0.1", 2707))
+        self.client.connect(("127.0.0.1", 2808))
         print(f"Connected to server at {host}:{port}")
        except Exception as error:
         print(f"Failed to connect : {error}")
@@ -28,17 +28,17 @@ class ChatClient:
       while True:
 
         #lets get their users input first and put in a data structure
-        message = input()
+          message = input()
 
-      if  message.lower() == '/exit':
+          if  message.lower() == '/exit':
                 print("Disconnecting...")
                 self.client.close()  # Close connection
-
+          break
        # send message to server
-      self.client.send(message.encode()) 
+          self.client.send(message.encode()) 
        
         
-      whole_message = f"{self.nickname}: {message}"
+          whole_message = f"{self.nickname}: {message}"
     
 
     
@@ -52,7 +52,7 @@ class ChatClient:
 
         
         #  checking what type of message from the sever
-          if message == "MERCY":  
+          if message == "NICK":  
              
             #  server will ask for the name
              self.client.send(self.nickname.encode())
@@ -78,35 +78,24 @@ class ChatClient:
 
          break
 
-def run_client(self):
-       print("=" * 50)
-       print("CHAT CLIENT")
-       print("=" * 50)
-       
+    def run(self):
+       """  here the client stsrts running"""
        self.nickname = input(("Choose your nickname:"))
-       print(f"Welcome {nickname}")
+       print(f"Welcome {self.nickname}")
        print("Commands: /create, /join, /rooms, /users")
-       print("=" * 50)
+      
 
           # the receiving thread the ears listening
-       receive_thread = threading.Thread(target=self.receive_messages) 
+       receive_thread = threading.Thread(target=self.receive_msg) 
        receive_thread.daemon = True
        receive_thread.start()
 
-           # the mouth to send 
-       send_thread = threading.Thread(target=self.send_messages)
-       send_thread.daemon = True
-       send_thread.start() 
-
-       send_thread.join()
-                             
-       self.accept_clients()
-
+       self.send_message()
 
       #  the start buttom
-       if __name__== "__main__":
-           client = ChatClient()
-           client.run()
+if __name__== "__main__":
+    client = ChatClient()
+    client.run()
 
 
 

@@ -7,7 +7,7 @@ class ChatServer:
      """
      With this the server can accept multiple connects,store, receive messeges and send broadcasting messeges
      """
-     def __init__(self, host="127.0.0.1" , port=2707):
+     def __init__(self, host="127.0.0.1" , port=2808):
 
 #creating the socket for server and client
 #the socket(socket.AF_INET uses IPv4 adresses
@@ -16,7 +16,7 @@ class ChatServer:
        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #binding which tells the Os to to listen here
-       self.server.bind(("127.0.0.1", 2707 ))
+       self.server.bind(("127.0.0.1", 2808 ))
 
 #waits for connections
        self.server.listen()
@@ -34,13 +34,11 @@ class ChatServer:
        print("=" * 50 )
        print(f"Server is listening on 27.0.0.1, 2707")
        print("=" * 50 )
-  
-
 
      def broadcasting(self, message,sender=None):
       """ here we send messages to every client """
      #loop through all the clients that we got
-      for client in self.client:
+      for client in self.clients:
            try:
           #sending message if fails client disconnected
                 client.send(message)
@@ -50,8 +48,8 @@ class ChatServer:
     
      def broadcast_to_a_specific_room(self, message, room,sender=None):
        """Broadcasting to a specific roomdepending on what the user used"""
-       if room  in self.room:
-            for client in self.room[room_name]:
+       if room in self.rooms:
+            for client in self.rooms[room_name]:
                 if client != sender:
                     try:
                         client.send(message)
@@ -88,6 +86,7 @@ class ChatServer:
       while True:
           try: # infite loop on and on of receiving thr clients message
                message = client.recv(1024).decode()
+               print("Received", message)
                  # once u get the msg u send to everyone
                if message: 
                   self.broadcast(message, sender_client=client)
@@ -96,25 +95,31 @@ class ChatServer:
 
 
                    # the user is able to create a chat room
-               if message.startswith(" /create"):
+               if message.startswith("/create"):
                    parts= message.split(" ")
                    if len(parts) > 1:
                          room_name = parts[1]
 
-                         if room_name in self.rooms:
-                             client.send(f"Room name taken choose another one!".encode())
+                              # create room 
+                         if room_name not in self.rooms:
+                               self.rooms[room_name] = []
 
-                         else:
-                            self.rooms[room_name] = []
-                            client.send(f"Room has been created".encode())
+                              #  remove them from current room
+                         old_room = self.user_rooms.get(client)
+                              
 
-                            self.rooms[room_name].append(client)
-                            self.user_rooms[client] = room_name
-                            client.send(f"You have joined '{room_name} welcome!".encode())
+                            
+                         if old_room and client in self.rooms.get(old_room, []):
+                              self.rooms[old_room].remove(client)
+
+                              #  qdd them to the created one
+                         self.rooms[room_name].append(client)
+                         self.user_rooms[client] = room_name
+                         client.send(f"You have joined '{room_name} welcome!".encode())
 
 
                    else:
-                        client.send("This is a wrong usage of /create <roomname>".encode())
+                        client.send("This is a wrong usage of /create <room_name>".encode())
 
                     # joining a new chatroom
                if message.startswith("/join"):
@@ -123,14 +128,14 @@ class ChatServer:
                      room_name = parts[1]
 
                        # removing from anyother room
-                     if room_name in self.room: # check if the room is in the server
+                     if room_name in self.rooms: # check if the room is in the server
                           if client in self.user_room: # check if the clinet is in the room
-                              old = self.ser_room[client] #  safe check 
-                              self.room(old).remove(client) #  if they are there we remoeve them
+                              old = self.user_rooms[client] #  safe check 
+                              self.rooms(old).remove(client) #  if they are there we remoeve them
   
                               # then now they join their new chat room
                           self.rooms[room_name].append(client)   #adds the user to the new room
-                          self.user_room[client]= room_name  #stores the user in the new room
+                          self.user_rooms[client]= room_name  #stores the user in the new room
                           client.send(f"You have now joined {room_name}".encode())
 
                             # get the users in the room
@@ -165,45 +170,49 @@ class ChatServer:
             #  ask for there name 
        client.send("NICK".encode())
        while True:
-            # ask for the name and if in nicknane tell its gone
-          if nickname in self.nicknames:
+           
            nickname = client.recv(1024).decode().strip() 
-           client.send("NAME_GONE".encode())
+            # ask for the name and if in nicknane tell its gone
+
+           if nickname in self.nicknames:
+              client.send("NAME_GONE".encode())
              # ask again 
-           client.send("NICK".encode())
-          continue
-       else:
-          break 
+              client.send("NICK".encode())
+          
+           else:
+               break 
 
 
 # add client to the chat
-      self.client.append(client)
-      self.nickname.append(nickname) #  unique names
+      self.clients.append(client)
+      self.nicknames.append(nickname) #  unique names
       self.broadcast(f"{nickname} welcome!" . encode())
 
 
          # added to the default room once accepted
-      self.rooms[DEFAULT_ROOM].append(client)
+      self.rooms["HOME"].append(client)
 
         # always remember that the client is there in the room
-      self.user_rooms[client] = "DEFAULT_ROOM"
+      self.user_rooms[client] = "HOME"
 
-      client.send(f"{nickname} is in {DEFAULT_ROOM} welcome !".encode())
+      client.send(f"{nickname} is in Home, welcome !".encode())
+
       client.send(f"Commands: /create, /join, /users, /rooms".encode())
-
+      client.send(f"You have joined Home".encode())
 
        # create the thread to listen which allows other users to join
       thread = threading.Thread(target=self.handle_client, args=(client,))
-      thread.start
+      thread.start()
 
      def run(self):
-        self.accept_clients()
+        self.accept_client()
 
     
     # start button for the server program
-        if __name__ == "__main__":
-              server = ChatServer()
-              server.run()
+if __name__ == "__main__":
+     server = ChatServer()
+     server.run()
+     
 
 
 
