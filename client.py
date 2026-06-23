@@ -7,12 +7,12 @@ class ChatClient:
 
     """
   
-    def __init__(self, host='127.0.0.1', port=2808):
+    def __init__(self, host='127.0.0.1', port=2905):
        # connect to socket the IPv4 and TCP 
        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
        # we now connect to server and if its not running we raise the expection part
        try:
-        self.client.connect(("127.0.0.1", 2808))
+        self.client.connect(("127.0.0.1", 2905))
         print(f"Connected to server at {host}:{port}")
        except Exception as error:
         print(f"Failed to connect : {error}")
@@ -81,7 +81,7 @@ class ChatClient:
     def run(self):
        """  here the client stsrts running"""
        self.nickname = input(("Choose your nickname:"))
-       print(f"Welcome {self.nickname}")
+       print(f"{self.nickname} welcome")
        print("Commands: /create, /join, /rooms, /users")
       
 

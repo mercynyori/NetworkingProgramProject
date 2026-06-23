@@ -7,7 +7,7 @@ class ChatServer:
      """
      With this the server can accept multiple connects,store, receive messeges and send broadcasting messeges
      """
-     def __init__(self, host="127.0.0.1" , port=2808):
+     def __init__(self, host="127.0.0.1" , port=2905):
 
 #creating the socket for server and client
 #the socket(socket.AF_INET uses IPv4 adresses
@@ -16,7 +16,7 @@ class ChatServer:
        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #binding which tells the Os to to listen here
-       self.server.bind(("127.0.0.1", 2808 ))
+       self.server.bind(("127.0.0.1", 2905))
 
 #waits for connections
        self.server.listen()
@@ -27,12 +27,12 @@ class ChatServer:
        self.nicknames = []
 
 # rooms created a dictionary is created when u enter u enter directly
-       self.rooms = {"Home": []} 
+       self.rooms = {"HOME": []} 
     # track the rooms that they are in
        self.user_rooms = {}  
 
        print("=" * 50 )
-       print(f"Server is listening on 27.0.0.1, 2707")
+       print(f"Server is listening on 27.0.0.1, 2905")
        print("=" * 50 )
 
      def broadcasting(self, message,sender=None):
@@ -166,14 +166,16 @@ class ChatServer:
       """ Here the server is constantly waiting for someone to come forever, asks for their name  then accepts"""
       while True:
          # wait for the client to come
-       client, address = self.server.accept()
+           client, address = self.server.accept()
             #  ask for there name 
-       client.send("NICK".encode())
-       while True:
-           
-           nickname = client.recv(1024).decode().strip() 
-            # ask for the name and if in nicknane tell its gone
+           client.send("NICK".encode())
 
+           nickname = None
+
+           while True:
+           
+                 nickname = client.recv(1024).decode().strip() 
+                    #check if we have the name already then tell its gone
            if nickname in self.nicknames:
               client.send("NAME_GONE".encode())
              # ask again 
@@ -183,27 +185,27 @@ class ChatServer:
                break 
 
 
-# add client to the chat
-      self.clients.append(client)
-      self.nicknames.append(nickname) #  unique names
-      self.broadcast(f"{nickname} welcome!" . encode())
+                   # add client to the chat and accept them
+           self.clients.append(client)
+           self.nicknames.append(nickname) #  unique names
+           self.broadcast(f"{nickname} welcome!" . encode())
 
 
          # added to the default room once accepted
-      self.rooms["HOME"].append(client)
+           self.rooms["HOME"].append(client)
 
         # always remember that the client is there in the room
-      self.user_rooms[client] = "HOME"
+           self.user_rooms[client] = "HOME"
 
-      client.send(f"{nickname} is in Home, welcome !".encode())
+           client.send(f"{nickname} is in Home".encode())
 
-      client.send(f"Commands: /create, /join, /users, /rooms".encode())
-      client.send(f"You have joined Home".encode())
+           client.send(f"Commands: /create, /join, /users, /rooms".encode())
+           client.send(f"You have joined Home".encode())
 
        # create the thread to listen which allows other users to join
-      thread = threading.Thread(target=self.handle_client, args=(client,))
-      thread.start()
-
+           thread = threading.Thread(target=self.handle_client, args=(client,))
+           thread.start()
+    
      def run(self):
         self.accept_client()
 
