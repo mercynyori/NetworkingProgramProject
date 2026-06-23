@@ -10,7 +10,12 @@ class ChatClient:
     def __init__(self, host='127.0.0.1', port=2905):
        # connect to socket the IPv4 and TCP 
        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.host = host
+        self.port = port
+        self. nickname = None 
+        self.running = False
        # we now connect to server and if its not running we raise the expection part
+        
        try:
         self.client.connect(("127.0.0.1", 2905))
         print(f"Connected to server at {host}:{port}")
