@@ -12,6 +12,7 @@ class ChatClient:
        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.port = port
+        #storage for nickname, we be there ones user sets it
         self. nickname = None 
         self.running = False
        # we now connect to server and if its not running we raise the expection part
@@ -21,10 +22,6 @@ class ChatClient:
         print(f"Connected to server at {host}:{port}")
        except Exception as error:
         print(f"Failed to connect : {error}")
-        #storage for nickname, we be there ones user sets it
-        self.nickname = None 
-        self.running = True
-
 
 
     def send_message(self): 
