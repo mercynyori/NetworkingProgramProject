@@ -1,5 +1,6 @@
 import socket # networking communications
 import threading # sending and receiving at the same time
+
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("127.0.0.1", 2120))
 
@@ -12,7 +13,7 @@ def receive():
       #while loopp 
       while True:
         try: 
-          message = client.recv(1024).decode()
+          message = client.recv(1024).decode("utf-8")
         
         #  checking what type of message from the sever
           if message == "NICK":  
@@ -49,14 +50,14 @@ def send():
       #infite while loop to keep accepting user input and msg they send untill they quit
        while True:
          try:
-               message = f"{nickname}: {input("")}"
+               message = input("")
 
                #exiting there
                if  message.lower() == '/exit':
                     print("Disconnecting...")
                     client.close()  # Close connection
                     break
-               client.send(message.encode()) 
+               client.send(message.encode("utf-8")) 
  
          except:
                  print("Connection lost")
