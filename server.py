@@ -4,7 +4,7 @@ import threading #multiple connections
 
 
 host="127.0.0.1"
-port=2902
+port=2120
 
 #the socket(socket.AF_INET uses IPv4 adresses
 #the second argument is all about the Tcp networ
@@ -12,7 +12,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 #binding which tells the Os to to listen here
-server.bind(("127.0.0.1", 2902))
+server.bind(("127.0.0.1", 2120))
 #waits for connections
 server.listen()
 print(f"Server is connected to {host}:{port}")
@@ -22,22 +22,25 @@ print(f"Server is connected to {host}:{port}")
 clients = []
 nicknames = []
 
-print(f"Server is listening on 27.0.0.1, 2902")
+print(f"Server is listening on 27.0.0.1, 2120")
 
 def broadcast(message):
     """ The messages goe to everyone"""
+    print(f"Broadcasting to {len(clients)} clients")
+
     for client in clients:
           try:
           #sending message if fails client disconnected
-             clients.send(message)
+             client.send(message.encode())
           except Exception as error:
              print(f"No able to send to client:{error}")
 
 def handle_client(client):
      while True:
           try: # infite loop on and on of receiving thr clients message
-               message = clients.recv(1024).decode()
-               print("Received", message)
+               message = client.recv(1024).decode()
+               print(f"Received")
+               broadcast(message)
 
           except:
                if client in clients:
@@ -48,7 +51,7 @@ def handle_client(client):
 
                   client.close()# close connection
 
-               broadcast(f" {nickname} has left chat".encode())
+               broadcast(f" {nickname} has left chat")
                break
           
 def receive():
@@ -69,7 +72,7 @@ def receive():
 
         #   here we tell everyone we have it
         client.send("Successfully connected".encode())
-        broadcast(f"{nickname} has joined!".encode())
+        broadcast(f"{nickname} has joined!")
 
 
         thread= threading.Thread(target=handle_client, args=(client,))
