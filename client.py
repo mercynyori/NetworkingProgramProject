@@ -1,44 +1,25 @@
 import socket # networking communications
 import threading # sending and receiving at the same time
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(("127.0.0.1", 2120))
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(("127.0.0.1", 2120))
 
-nickname = input("Choose nicknames:")
-
-
+nickname = input("Choose nickname: ")
 
 def receive(): 
       """ listens  continuosly for an any incoming messages to the user """ 
       #while loopp 
       while True:
         try: 
-          message = client.recv(1024).decode("utf-8")
+          message = sock.recv(1024).decode("utf-8")
         
         #  checking what type of message from the sever
-          if message == "NICK":  
-             
-            #  server will ask for the name
-             client.send(nickname.encode())
+          if message == "What is ur name":
+                sock.send(nickname.encode("utf-8"))
 
-          elif message == "NAME_TAKEN":
-             print("Name has been taken choose another one")
-             nickname = input("Your new nickname :")
-             client.send(nickname.encode())
-
-          
-          elif message == "NAME_EMPTY":
-             print("Your name cannot be empty")
-             nickname= input("New nickname: ")
-             client.send(nickname.encode())
-          
-      
-          else:
-            #  print the normal message of what the other users have
-                print(message)
-
-        except:
+        except Exception as error:
          print("User disconnected from the server")
+         sock.close()
 
          break
 
@@ -55,13 +36,13 @@ def send():
                #exiting there
                if  message.lower() == '/exit':
                     print("Disconnecting...")
-                    client.close()  # Close connection
+                    sock.close()  # Close connection
                     break
-               client.send(message.encode("utf-8")) 
+               sock.send(message.encode("utf-8")) 
  
-         except:
+         except Exception as error:
                  print("Connection lost")
-                 client.close()
+                 sock.close()
                  break
 
 
